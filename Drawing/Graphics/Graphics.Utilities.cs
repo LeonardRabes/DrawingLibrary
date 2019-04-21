@@ -94,16 +94,17 @@ namespace Drawing
             float distY = newHeight / (float)bitmap.Height;
 
             float currentY = 0;
-
+            float prevY = 0;
             for (int y = 0; y < bitmap.Height; y++)
             {
                 float currentX = 0;
+                float prevX = 0;
                 int newY = (int)Clamp(Convert.ToInt32(currentY), 0, newHeight - 1);
 
                 for (int x = 0; x < bitmap.Width; x++)
                 {
                     Color old = bitmap.PixelData[x, y];
-                    currentX += distX;
+
 
                     int newX = (int)Clamp(Convert.ToInt32(currentX), 0, newWidth - 1);
 
@@ -121,7 +122,22 @@ namespace Drawing
                     }
 
                     newBmp.PixelData[newX, newY] = current;
+
+                    if (newWidth > bitmap.Width || newHeight > bitmap.Height)
+                    {
+                        for (int fillY = 0; fillY < currentY - prevY; fillY++)
+                        {
+                            for (int fillX = 0; fillX < currentX - prevX; fillX++)
+                            {
+                                newBmp.PixelData[newX - fillX, newY - fillY] = current;
+                            }
+                        }
+                    }
+
+                    prevX = currentX;
+                    currentX += distX;   
                 }
+                prevY = currentY;
                 currentY += distY;
             }
 

@@ -26,19 +26,25 @@ namespace Drawing
 
         public RectangleF GetCharacterRect(char c)
         {
-            int index = (int)c - startingChar + 1;
-            if (index < charAmount - 1)
+            int index = (int)c - startingChar;
+
+            if (index >= 0 && index < charAmount - 1)
             {
                 return new RectangleF(charPositionX[index], 0, charPositionX[index + 1] - charPositionX[index], FontAtlasBmp.Height);
             }
-            else
+            else if (index == charAmount - 1)
             {
                 return new RectangleF(charPositionX[(int)Graphics.Clamp(index, 0, charAmount - 1)], 0, FontAtlasBmp.Width - charPositionX[(int)Graphics.Clamp(index, 0, charAmount - 1)], FontAtlasBmp.Height);
+            }
+            else
+            {
+                return new RectangleF(-1, -1, FontAtlasBmp.Height * 0.2F, FontAtlasBmp.Height);
             }
         }
 
         private Bitmap parseStream(Stream fontAtlas)
         {
+            fontAtlas.Position = 0;
             BinaryReader reader = new BinaryReader(fontAtlas);
             string str = new string(reader.ReadChars(3));
             float version = reader.ReadSingle();
