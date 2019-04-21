@@ -87,7 +87,7 @@ namespace Drawing
                     }
                     else
                     {
-                        if ((y == upperLeft.Y || x == upperLeft.X) || (y == lowerLeft.Y - 1 || x == upperRight.X -1))
+                        if ((y == upperLeft.Y || x == upperLeft.X) || (y == lowerLeft.Y - 1 || x == upperRight.X - 1))
                         {
                             targetBitmap.PixelData[(int)Clamp(x, 0, targetBitmap.Width - 1), (int)Clamp(y, 0, targetBitmap.Height - 1)] = pen.Color;
                         }
@@ -99,17 +99,38 @@ namespace Drawing
 
         public void DrawImage(Bitmap bitmap, PointF point)
         {
-            for (int y = (int)point.Y; y < (int)point.Y + bitmap.Height; y++)
+            DrawImage(bitmap, point, new RectangleF(new PointF(), bitmap.Size));
+        }
+
+        public void DrawImage(Bitmap bitmap, PointF point, RectangleF rectangle)
+        {
+            for (int y = (int)point.Y; y < (int)point.Y + rectangle.Height; y++)
             {
-                for (int x = (int)point.X; x < (int)point.X + bitmap.Width; x++)
+                for (int x = (int)point.X; x < (int)point.X + rectangle.Width; x++)
                 {
-                    Color upper = bitmap.PixelData[x - (int)point.X, y - (int)point.Y];
+                    int upperX = Convert.ToInt32(x - point.X + rectangle.X);
+                    int upperY = Convert.ToInt32(y - point.Y + rectangle.Y);
+                    Color upper = bitmap.PixelData[(int)Clamp(upperX, 0, bitmap.Width - 1), (int)Clamp(upperY, 0, targetBitmap.Height - 1)];
                     Color lower = targetBitmap.PixelData[(int)Clamp(x, 0, targetBitmap.Width - 1), (int)Clamp(y, 0, targetBitmap.Height - 1)];
 
                     Color newCol = AlphaBlend(lower, upper);
 
                     targetBitmap.PixelData[(int)Clamp(x, 0, targetBitmap.Width - 1), (int)Clamp(y, 0, targetBitmap.Height - 1)] = newCol;
                 }
+            }
+        }
+
+        public void DrawString(string str, Font font, Color fontColor, PointF location)
+        {
+            float posX = 0;
+            for (int i = 0; i < str.Length; i++)
+            {
+                PointF newPt = new PointF(location.X + posX, location.Y);
+                RectangleF charRect = font.GetCharacterRect(str[i]);
+
+                DrawImage(font.FontAtlasBmp, newPt, charRect);
+
+                posX += charRect.Width;
             }
         }
     }

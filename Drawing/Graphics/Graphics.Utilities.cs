@@ -128,5 +128,17 @@ namespace Drawing
 
             return newBmp;
         }
+
+        public SizeF MeasureString(string str, Font font)
+        {
+            float posX = 0;
+            for (int i = 0; i < str.Length; i++)
+            {
+                RectangleF charRect = font.GetCharacterRect(str[i]);
+                posX += charRect.Width;
+            }
+
+            return new SizeF(posX, font.FontSize);
+        }
     }
 }

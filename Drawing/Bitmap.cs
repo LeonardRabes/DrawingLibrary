@@ -11,6 +11,7 @@ namespace Drawing
     {
         public int Width { get => width; }
         public int Height { get => height; }
+        public SizeF Size { get => new SizeF(width, height); }
         public Color[,] PixelData { get => pixelData; }
 
         private Color[,] pixelData;
