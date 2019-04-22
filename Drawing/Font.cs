@@ -7,16 +7,24 @@ using System.IO;
 
 namespace Drawing
 {
+    /// <summary>
+    /// Basic container for character data and can be used to draw strings.
+    /// </summary>
     public class Font
     {
         public string FontFamily;
         public float FontSize;
         public Bitmap FontAtlasBmp;
 
-        public float[] charPositionX;
+        private float[] charPositionX;
         private int charAmount;
         private byte startingChar;
 
+        /// <summary>
+        /// Initializes a font by a font atlas and font size.
+        /// </summary>
+        /// <param name="fontAtlasStream">Stream containing the .fta file</param>
+        /// <param name="fontSize">The height of the characters in pixels</param>
         public Font(Stream fontAtlasStream, float fontSize)
         {
             FontSize = fontSize;
@@ -24,6 +32,11 @@ namespace Drawing
             FontAtlasBmp = scaleFont(fontSize);
         }
 
+        /// <summary>
+        /// Returns a rectangle the character lies in within the font atlas.
+        /// </summary>
+        /// <param name="c">The character to search for.</param>
+        /// <returns></returns>
         public RectangleF GetCharacterRect(char c)
         {
             int index = (int)c - startingChar;

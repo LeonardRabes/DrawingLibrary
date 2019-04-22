@@ -8,6 +8,12 @@ namespace Drawing
 {
     public partial class Graphics
     {
+        /// <summary>
+        /// Draws a line between two points
+        /// </summary>
+        /// <param name="pen">Pen to draw the line</param>
+        /// <param name="point1">Point 1</param>
+        /// <param name="point2">Point 2</param>
         public void DrawLine(Pen pen, PointF point1, PointF point2)
         {
             if ((point2 - point1).X == 0 && pen.Width > 1) //if vertical line
@@ -67,6 +73,11 @@ namespace Drawing
             }
         }
 
+        /// <summary>
+        /// Draws a rectangle.
+        /// </summary>
+        /// <param name="pen">Pen to draw the rectangle</param>
+        /// <param name="rectangle">Rectangle to draw</param>
         public void DrawRectangle(Pen pen, RectangleF rectangle)
         {
             PointF upperLeft = new PointF(rectangle.X, rectangle.Y); ;
@@ -97,11 +108,22 @@ namespace Drawing
             }
         }
 
+        /// <summary>
+        /// Draws a complete bitmap.
+        /// </summary>
+        /// <param name="bitmap">Bitmap to draw</param>
+        /// <param name="point">Upper left corner of the drawn bitmap</param>
         public void DrawImage(Bitmap bitmap, PointF point)
         {
             DrawImage(bitmap, point, new RectangleF(new PointF(), bitmap.Size));
         }
 
+        /// <summary>
+        /// Draws a specified rectangle of a bitmap.
+        /// </summary>
+        /// <param name="bitmap">Bitmap to draw</param>
+        /// <param name="point">Upper left corner of the drawn bitmap</param>
+        /// <param name="rectangle">Rectangle inside of the bitmap</param>
         public void DrawImage(Bitmap bitmap, PointF point, RectangleF rectangle)
         {
             for (int y = (int)point.Y; y < (int)point.Y + rectangle.Height; y++)
@@ -120,6 +142,13 @@ namespace Drawing
             }
         }
 
+        /// <summary>
+        /// Draws a specified rectangle of a bitmap and changes all colors to the given one.
+        /// </summary>
+        /// <param name="bitmap">Bitmap to draw</param>
+        /// <param name="point">Upper left corner of the drawn bitmap</param>
+        /// <param name="rectangle">Rectangle inside of the bitmap</param>
+        /// <param name="color">New image color</param>
         public void DrawImage(Bitmap bitmap, PointF point, RectangleF rectangle, Color color)
         {
             for (int y = (int)point.Y; y < (int)point.Y + rectangle.Height; y++)
@@ -139,6 +168,13 @@ namespace Drawing
             }
         }
 
+        /// <summary>
+        /// Draws a string by a given font and color.
+        /// </summary>
+        /// <param name="str">String to draw</param>
+        /// <param name="font">Font to draw with</param>
+        /// <param name="fontColor">Color to draw with</param>
+        /// <param name="location">Upper left corner of the drawn string</param>
         public void DrawString(string str, Font font, Color fontColor, PointF location)
         {
             float posX = 0;

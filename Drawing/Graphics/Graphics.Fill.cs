@@ -8,6 +8,10 @@ namespace Drawing
 {
     public partial class Graphics
     {
+        /// <summary>
+        /// Invalidates all current pixel data and replaces it with a new color.
+        /// </summary>
+        /// <param name="fillColor">Fill color.</param>
         public void Invalidate(Color fillColor)
         {
             for (int y = 0; y < targetBitmap.Height; y++)
@@ -19,6 +23,11 @@ namespace Drawing
             }
         }
 
+        /// <summary>
+        /// Draws a filled rectangle into the bitmap.
+        /// </summary>
+        /// <param name="fillColor">Fill color.</param>
+        /// <param name="rectangle">Rectangle to fill.</param>
         public void FillRectangle(Color fillColor, RectangleF rectangle)
         {
             for (int y = (int)rectangle.Y; y < (int)rectangle.Y + rectangle.Height; y++)
@@ -30,6 +39,11 @@ namespace Drawing
             }
         }
 
+        /// <summary>
+        /// Draws a filled polygon into the bitmap.
+        /// </summary>
+        /// <param name="fillColor">Fill color.</param>
+        /// <param name="points">Array of points which represent the corners of the polygon.</param>
         public void FillPolygon(Color fillColor, PointF[] points)
         {
             //get outer points

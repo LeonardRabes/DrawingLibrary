@@ -8,6 +8,9 @@ namespace Drawing
 {
     public partial class Graphics
     {
+        /// <summary>
+        /// Limits a value between two others.
+        /// </summary>
         public static float Clamp(float val, int min, int max)
         {
             if (val < min)
@@ -22,6 +25,11 @@ namespace Drawing
             return val;
         }
 
+        /// <summary>
+        /// Searches in a point array for the maximum X and Y value and returns them as PointF.
+        /// </summary>
+        /// <param name="points">Point array</param>
+        /// <returns></returns>
         public static PointF GetMaxPoint(PointF[] points)
         {
             float xmax = 0;
@@ -42,6 +50,11 @@ namespace Drawing
             return new PointF(xmax, ymax);
         }
 
+        /// <summary>
+        /// Searches in a point array for the minimum X and Y value and returns them as PointF.
+        /// </summary>
+        /// <param name="points">Point array</param>
+        /// <returns></returns>
         public static PointF GetMinPoint(PointF[] points)
         {
             float xmin = points[0].X;
@@ -62,6 +75,12 @@ namespace Drawing
             return new PointF(xmin, ymin);
         }
 
+        /// <summary>
+        /// Returns a linear function, which is calculated by given points.
+        /// </summary>
+        /// <param name="point1"></param>
+        /// <param name="point2"></param>
+        /// <returns>If x1 - x2 = 0 the linear function will always return -1.</returns>
         public static Func<float, float> GetFunction(PointF point1, PointF point2)
         {
             float m = (point1.Y - point2.Y) / (point1.X - point2.X);
@@ -77,6 +96,12 @@ namespace Drawing
             }
         }
 
+        /// <summary>
+        /// Blends two colors together by the upper colors alpha value.
+        /// </summary>
+        /// <param name="lower">Color on lower layer.</param>
+        /// <param name="upper">Color on upper layer.</param>
+        /// <returns></returns>
         public static Color AlphaBlend(Color lower, Color upper)
         {
             float alpha = upper.A / 255F;
@@ -87,6 +112,13 @@ namespace Drawing
             return Color.FromRgbA(r, g, b, 255);
         }
 
+        /// <summary>
+        /// Resizes a bitmap to new size.
+        /// </summary>
+        /// <param name="bitmap">Bitmap to resize.</param>
+        /// <param name="newWidth">New width.</param>
+        /// <param name="newHeight">New height.</param>
+        /// <returns></returns>
         public static Bitmap ResizeImage(Bitmap bitmap, int newWidth, int newHeight)
         {
             Bitmap newBmp = new Bitmap(newWidth, newHeight, Color.FromInt32(0));
@@ -99,14 +131,14 @@ namespace Drawing
             {
                 float currentX = 0;
                 float prevX = 0;
-                int newY = (int)Clamp(Convert.ToInt32(currentY), 0, newHeight - 1);
+                int newY = (int)Clamp((float)Math.Ceiling(currentY), 0, newHeight - 1);
 
                 for (int x = 0; x < bitmap.Width; x++)
                 {
                     Color old = bitmap.PixelData[x, y];
 
 
-                    int newX = (int)Clamp(Convert.ToInt32(currentX), 0, newWidth - 1);
+                    int newX = (int)Clamp((float)Math.Ceiling(currentX), 0, newWidth - 1);
 
 
                     Color current = newBmp.PixelData[newX, newY];
@@ -125,9 +157,9 @@ namespace Drawing
 
                     if (newWidth > bitmap.Width || newHeight > bitmap.Height)
                     {
-                        for (int fillY = 0; fillY < currentY - prevY; fillY++)
+                        for (int fillY = 0; fillY <= currentY - prevY; fillY++)
                         {
-                            for (int fillX = 0; fillX < currentX - prevX; fillX++)
+                            for (int fillX = 0; fillX <= currentX - prevX; fillX++)
                             {
                                 newBmp.PixelData[newX - fillX, newY - fillY] = current;
                             }
@@ -145,6 +177,12 @@ namespace Drawing
             return newBmp;
         }
 
+        /// <summary>
+        /// Measures the size of a string.
+        /// </summary>
+        /// <param name="str">String to measure.</param>
+        /// <param name="font">Font to measure with.</param>
+        /// <returns></returns>
         public SizeF MeasureString(string str, Font font)
         {
             float posX = 0;
