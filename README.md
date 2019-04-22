@@ -14,6 +14,7 @@ Contains basic drawing functionality for bitmaps.
   - Line
   - Rectangle
   - Image
+  - Strings
 - Fill:
   - Rectangle
   - Polygon
