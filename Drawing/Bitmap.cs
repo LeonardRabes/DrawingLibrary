@@ -8,6 +8,15 @@ using System.IO;
 namespace Drawing
 {
     /// <summary>
+    /// Sets the encoding of the Bitmap
+    /// </summary>
+    public enum BitmapEncoding
+    {
+        Uncompressed24Bit,
+        Uncompressed32Bit
+    };
+
+    /// <summary>
     /// Basic image container.
     /// </summary>
     public class Bitmap
@@ -76,41 +85,58 @@ namespace Drawing
         /// <summary>
         /// Returns a .bmp file as a stream.
         /// </summary>
-        public Stream ToStream()
+        public Stream ToStream(BitmapEncoding encoding = BitmapEncoding.Uncompressed24Bit)
         {
             MemoryStream mstream = new MemoryStream();
-
             BinaryWriter writer = new BinaryWriter(mstream);
 
+            //Settings
+            int bytesPerPx = 3;
+            if (encoding == BitmapEncoding.Uncompressed24Bit)
+            {
+                bytesPerPx = 3;
+            }
+            else if (encoding == BitmapEncoding.Uncompressed32Bit)
+            {
+                bytesPerPx = 4;
+            }
+
+            //padding - if bit amount of a scan line (1x width) cant be divided by 4 padding is needed
+            int padding = Convert.ToInt32(Math.Ceiling(width * bytesPerPx / 4F) * 4F - width * bytesPerPx);
+
             //Header 
-            writer.Write(BitConverter.ToInt16(new byte[] { (byte)'B', (byte)'M' }, 0)); //bfType
-
-            int padding = Convert.ToInt32(Math.Ceiling(width * 3F / 4F) * 4F - width * 3);//padding - if bit amount of a scan line (1x width) cant be divided by 4 padding is needed
-            writer.Write((int)54 + width * height * 3 + height * padding); //fSize
-
-            writer.Write((int)0); //bfReserved
-            writer.Write((int)54); //bfOffBits
+            writer.Write(new char[] { 'B', 'M' });                                  //bfType
+            writer.Write((int)54 + width * height * bytesPerPx + height * padding); //fSize
+            writer.Write((int)0);                                                   //bfReserved
+            writer.Write((int)54);                                                  //bfOffBits
 
             //InfoHeader 
-            writer.Write((int)40); //hSize
-            writer.Write(width); //width
-            writer.Write(height); //height (- => from top to bottom)
-            writer.Write((short)1); //planes
-            writer.Write((short)24); //bits per pixel
-            writer.Write((int)0); //compression (0 = none)
-            writer.Write((int)0); //compressed image size
-            writer.Write((int)3779); //pixel/m X
-            writer.Write((int)3779); //pixel/m Y
-            writer.Write((int)0); //colors used
-            writer.Write((int)0); //important colors (0 = all)
+            writer.Write((int)40);                                                  //hSize
+            writer.Write(width);                                                    //width
+            writer.Write(height);                                                   //height (- => from top to bottom)
+            writer.Write((short)1);                                                 //planes
+            writer.Write((short)(bytesPerPx * 8));                                  //bits per pixel
+            writer.Write((int)0);                                                   //compression (0 = none)
+            writer.Write((int)width * height * bytesPerPx);                         //image size
+            writer.Write((int)3779);                                                //pixel/m X
+            writer.Write((int)3779);                                                //pixel/m Y
+            writer.Write((int)0);                                                   //colors used
+            writer.Write((int)0);                                                   //important colors (0 = all)
 
             //pixel data
-            
+
             for (int y = height - 1; y >= 0; y--)
             {
                 for (int x = 0; x < width; x++)
                 {
-                    writer.Write(pixelData[x, y].ToBit24BGR());
+                    if (encoding == BitmapEncoding.Uncompressed24Bit)
+                    {
+                        writer.Write(pixelData[x, y].ToBit24BGR());
+                    }
+                    else if (encoding == BitmapEncoding.Uncompressed32Bit)
+                    {
+                        writer.Write(pixelData[x, y].ToBit32BGRA());
+                    }
                 }
 
                 if (padding > 0)
