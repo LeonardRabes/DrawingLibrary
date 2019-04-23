@@ -33,6 +33,14 @@ namespace Drawing
         }
 
         /// <summary>
+        /// Returns the color as a byte array (0=Blue, 1=Green, 2=Red, 3=Alpha)
+        /// </summary>
+        public byte[] ToBit32BGRA()
+        {
+            return new byte[] { B, G, R, 255 };
+        }
+
+        /// <summary>
         /// Creates the color from RGBA.
         /// </summary>
         /// <param name="r">The red value of the color.</param>

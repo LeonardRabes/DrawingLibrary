@@ -57,7 +57,6 @@ namespace Drawing
 
         private Bitmap parseStream(Stream fontAtlas)
         {
-            fontAtlas.Position = 0;
             BinaryReader reader = new BinaryReader(fontAtlas);
             string str = new string(reader.ReadChars(3));
             float version = reader.ReadSingle();
