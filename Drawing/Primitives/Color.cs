@@ -37,7 +37,7 @@ namespace Drawing
         /// </summary>
         public byte[] ToBit32BGRA()
         {
-            return new byte[] { B, G, R, 255 };
+            return new byte[] { B, G, R, A };
         }
 
         /// <summary>
