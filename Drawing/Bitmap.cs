@@ -144,6 +144,7 @@ namespace Drawing
                     writer.Write(new byte[padding]);
                 }
             }
+            mstream.Position = 0;
 
             return mstream;
         }
