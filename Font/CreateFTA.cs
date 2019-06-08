@@ -32,22 +32,26 @@ namespace FontAtlas
 
             //header
             writer.Write(new byte[] { (byte)'F', (byte)'T', (byte)'A' }); //filetype
-            writer.Write(1.0F);//version
+            writer.Write(2.0F);//version
             writer.Write(bmp.Width);//width
             writer.Write(bmp.Height);//height
             writer.Write(str.Length);//char amount
             writer.Write((byte)33); //starting char
             writer.Write(fontFamily);//fontFamily
 
+            BitArray bitArray = new BitArray();
+
             for (int y = 0; y < bmp.Height; y++)
             {
                 for (int x = 0; x < bmp.Width; x++)
                 {
-                    writer.Write(bmp.GetPixel(x, y).R);
-                    writer.Write(bmp.GetPixel(x, y).G);
-                    writer.Write(bmp.GetPixel(x, y).B);
+                    var val = bmp.GetPixel(x, y).R;
+
+                    bitArray.Add(val == 255);
                 }
             }
+
+            writer.Write(bitArray.GetBytes());
 
             foreach (var s in sizes)
             {
