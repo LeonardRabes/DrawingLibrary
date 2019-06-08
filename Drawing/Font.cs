@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using Binary.Collections;
 
 namespace Drawing
 {
@@ -72,16 +73,23 @@ namespace Drawing
             }
 
             Bitmap bmp = new Bitmap(width, height);
+            BitArray bitArray = new BitArray(reader.ReadBytes((int)Math.Ceiling(width * height / 8.0)), width * height);
+            bool[] pixelData = bitArray.GetBits();
 
+            int count = 0;
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
                 {
                     Color col = new Color();
-                    col.R = reader.ReadByte();
-                    col.G = reader.ReadByte();
-                    col.B = reader.ReadByte();
-                    col.A = col.R;
+
+                    if (pixelData[count++])
+                    {
+                        col.R = 255;
+                        col.G = 255;
+                        col.B = 255;
+                        col.A = 255;
+                    }
 
                     bmp.PixelData[x, y] = col;
                 }
